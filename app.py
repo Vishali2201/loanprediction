@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify, render_template
 import joblib
 import numpy as np
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS to handle cross-origin requests
 
 # Load model and scaler
 model = joblib.load('voting_classifier_model.pkl')
@@ -38,4 +40,4 @@ def predict():
     return jsonify({'loan_status': loan_status})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)  # Use debug=False in production
