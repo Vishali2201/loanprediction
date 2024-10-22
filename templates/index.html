@@ -143,32 +143,21 @@
             bank_asset_value: document.getElementById('bank_asset_value').value
         };
 
-        try {
-            // Send a POST request to the deployed Flask API
-            const response = await fetch('https://loanprediction-myut.onrender.com/predict', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            });
+        // Send a POST request to the Flask API
+        const response = await fetch('http://127.0.0.1:5000/predict', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+        // Get the prediction result
+        const result = await response.json();
 
-            // Get the prediction result
-            const result = await response.json();
-
-            // Display the result
-            document.getElementById('result').innerHTML = `Loan Status: ${result.loan_status}`;
-            document.getElementById('result').style.display = 'block';
-
-        } catch (error) {
-            // Display error in case of network issues or failure
-            document.getElementById('result').innerHTML = `Error: ${error.message}`;
-            document.getElementById('result').style.display = 'block';
-        }
+        // Display the result
+        document.getElementById('result').innerHTML = `Loan Status: ${result.loan_status}`;
+        document.getElementById('result').style.display = 'block';
     }
 </script>
 
