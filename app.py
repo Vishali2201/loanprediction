@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS
 import joblib
 import numpy as np
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 
 # Load model and scaler
 model = joblib.load('voting_classifier_model.pkl')
@@ -36,6 +38,3 @@ def predict():
     loan_status = 'Approved' if prediction[0] == 0 else 'Rejected'
 
     return jsonify({'loan_status': loan_status})
-
-if __name__ == '__main__':
-    app.run(debug=True)
