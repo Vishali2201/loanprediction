@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <title>Loan Approval Prediction</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            padding: 50px;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            max-width: 800px;
+            height: auto;
+            margin: auto;
+            transition: all 0.3s ease-in-out;
+        }
+        .container:hover {
+            transform: scale(1.03);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            font-size: 26px;
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 16px;
+            color: #666;
+            font-weight: 600;
+        }
+        input[type="number"], select {
+            width: 98%;
+            padding: 12px;
+            margin: 10px 0 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.2s;
+        }
+        input[type="number"]:focus, select:focus {
+            border-color: #036ac5;
+            outline: none;
+            box-shadow: 0 0 5px rgba(4, 108, 253, 0.4);
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #096ef2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0974c7;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            display: none;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Loan Approval Prediction</h2>
+
+    <label for="no_of_dependents">Number of Dependents:</label>
+    <input type="number" id="no_of_dependents" min="0" required>
+
+    <label for="education">Education:</label>
+    <select id="education">
+        <option value="1">Graduate</option>
+        <option value="0">Not Graduate</option>
+    </select>
+
+    <label for="self_employed">Self Employed:</label>
+    <select id="self_employed">
+        <option value="1">Yes</option>
+        <option value="0">No</option>
+    </select>
+
+    <label for="income_annum">Annual Income:</label>
+    <input type="number" id="income_annum" min="0" required>
+
+    <label for="loan_amount">Loan Amount:</label>
+    <input type="number" id="loan_amount" min="0" required>
+
+    <label for="loan_term">Loan Term (months):</label>
+    <input type="number" id="loan_term" min="0" required>
+
+    <label for="cibil_score">CIBIL Score:</label>
+    <input type="number" id="cibil_score" min="300" max="900" required>
+
+    <label for="residential_assets_value">Residential Assets Value:</label>
+    <input type="number" id="residential_assets_value" min="0" required>
+
+    <label for="commercial_assets_value">Commercial Assets Value:</label>
+    <input type="number" id="commercial_assets_value" min="0" required>
+
+    <label for="luxury_assets_value">Luxury Assets Value:</label>
+    <input type="number" id="luxury_assets_value" min="0" required>
+
+    <label for="bank_asset_value">Bank Asset Value:</label>
+    <input type="number" id="bank_asset_value" min="0" required>
+
+    <button onclick="getPrediction()">Predict Loan Status</button>
+
+    <div id="result" class="result"></div>
+</div>
+
+<script>
+    async function getPrediction() {
+        // Collect user input
+        const data = {
+            no_of_dependents: document.getElementById('no_of_dependents').value,
+            education: document.getElementById('education').value,
+            self_employed: document.getElementById('self_employed').value,
+            income_annum: document.getElementById('income_annum').value,
+            loan_amount: document.getElementById('loan_amount').value,
+            loan_term: document.getElementById('loan_term').value,
+            cibil_score: document.getElementById('cibil_score').value,
+            residential_assets_value: document.getElementById('residential_assets_value').value,
+            commercial_assets_value: document.getElementById('commercial_assets_value').value,
+            luxury_assets_value: document.getElementById('luxury_assets_value').value,
+            bank_asset_value: document.getElementById('bank_asset_value').value
+        };
+
+        // Send a POST request to the Flask API
+        const response = await fetch('http://127.0.0.1:5000/predict', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        // Get the prediction result
+        const result = await response.json();
+
+        // Display the result
+        document.getElementById('result').innerHTML = `Loan Status: ${result.loan_status}`;
+        document.getElementById('result').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
